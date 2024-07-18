@@ -1,32 +1,38 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function Contact() {
 
+    const { postFormData } = useAuth();
 
     const [values, setValues] = useState({
         firstname: '',
         lastname: '',
         email: '',
-        phone: '',
         message: '',
+        phone: '',
       });
     
-      useEffect(() => {
-        console.log(values); // Log the updated state values
-      }, [values]); // Add values as a dependency
-    
-      const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setValues((prevState) => ({ ...prevState, [name]: value }));
-      };
-    
-      const handleSubmit = (e: any) => {
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('submit');
-      };
+
+        const formData = {
+            firstname: values.firstname,
+            lastname: values.lastname,
+            email: values.email,
+            message: values.message,
+            phone: values.phone,
+        }
+        postFormData(formData);
+    };
 
     return (
         <form onSubmit={handleSubmit} className="max-w-screen-lg mx-auto my-32">
@@ -40,7 +46,7 @@ export default function Contact() {
                 </div>
                 <div className="relative z-0 w-full mb-5 group">
 
-                    <input type="text" name="last-name" value={values.lastname} id="floating_last_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required onChange={handleInputChange}/>
+                    <input type="text" name="lastname" value={values.lastname} id="floating_last_name" className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required onChange={handleInputChange}/>
 
                     <label htmlFor="floating_last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Last name</label>
                 </div>
