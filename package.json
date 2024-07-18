@@ -2,6 +2,9 @@
   "name": "private-gp",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "21.x"
+  },
   "scripts": {
     "dev": "next dev -p 4000",
     "build": "next build",
