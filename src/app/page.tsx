@@ -3,6 +3,7 @@ import Cards from "./components/Cards";
 import ImageCard from "./components/ImageCard";
 import Statement from "./components/Statement";
 import Contact from "./components/Contact";
+import { AuthProvider } from "../../context/AuthContext";
 
 export default function Home() {
   return (
@@ -15,7 +16,11 @@ export default function Home() {
         <Cards />
         <ImageCard />
         <Statement />
-        <Contact />
+
+        <AuthProvider>
+          <Contact />
+        </AuthProvider>
+        
         
       </section>
     </main>
