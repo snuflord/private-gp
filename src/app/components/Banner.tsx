@@ -20,7 +20,7 @@ export default function Banner() {
 
         <div className="absolute inset-0 bg-black/50 w-full h-full z-20"></div>
 
-        <h1 className="relative z-30 text-3xl md:text-5xl font-bold">Private GP Wilmslow</h1>
+        <h1 className="relative z-30 text-3xl md:text-5xl font-bold text-white">Private GP Wilmslow</h1>
     </div>
 
     );

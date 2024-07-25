@@ -3,6 +3,7 @@
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button} from "@nextui-org/react";
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -31,33 +32,19 @@ export default function Navigation() {
           <Link href="/" className="font-bold text-inherit">HOME</Link>
         </NavbarBrand>
       </NavbarContent>
+      
+      <NavbarContent justify="end">
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
+        <NavbarItem isActive>
           <Link color="foreground" href="/contact">
             Contact
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
-          </Link>
-        </NavbarItem>
+
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
+          <ThemeToggle />
         </NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (

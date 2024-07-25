@@ -35,7 +35,7 @@ export default function Contact() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-screen-lg mx-auto my-32">
+        <form onSubmit={handleSubmit} className="max-w-screen-lg mx-auto py-10 md:py-32">
 
             <div className="grid md:grid-cols-2 md:gap-6">
                 <div className="relative z-0 w-full mb-5 group">

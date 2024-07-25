@@ -1,9 +1,10 @@
+import { AuthProvider } from "../../context/AuthContext";
 import Banner from "./components/Banner";
 import Cards from "./components/Cards";
 import ImageCard from "./components/ImageCard";
 import Statement from "./components/Statement";
 import Contact from "./components/Contact";
-import { AuthProvider } from "../../context/AuthContext";
+import EmailContact from "./components/EmailContact";
 
 export default function Home() {
   return (
@@ -15,11 +16,12 @@ export default function Home() {
         
         <Cards />
         <ImageCard />
+        <EmailContact />
         <Statement />
-
-        <AuthProvider>
+        
+        {/* <AuthProvider>
           <Contact />
-        </AuthProvider>
+        </AuthProvider> */}
         
         
       </section>
