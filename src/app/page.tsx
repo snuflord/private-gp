@@ -5,6 +5,7 @@ import ImageCard from "./components/ImageCard";
 import Statement from "./components/Statement";
 import Contact from "./components/Contact";
 import EmailContact from "./components/EmailContact";
+import BlogCards from "./components/BlogCards";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <ImageCard />
         <EmailContact />
         <Statement />
+        <BlogCards />
         
         {/* <AuthProvider>
           <Contact />

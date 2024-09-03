@@ -6,28 +6,32 @@
     "node": "20.x"
   },
   "scripts": {
-    "dev": "next dev -p 4000",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "dev": "nvm exec 20.9.0 node -v && next dev -p 4000",
+  "build": "nvm exec 20.9.0 node -v && next build",
+  "start": "nvm exec 20.9.0 node -v && next start",
+  "lint": "next lint"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.1",
     "@nextui-org/button": "^2.0.34",
     "@nextui-org/link": "^2.0.32",
     "@nextui-org/navbar": "^2.0.33",
     "@nextui-org/react": "^2.4.2",
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
+    "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.2.12",
     "next": "14.2.4",
-    "pg": "^8.12.0",
+    "qs": "^6.13.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.2.1"
+    "react-icons": "^5.2.1",
+    "react-markdown": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
+    "@types/qs": "^6.9.15",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

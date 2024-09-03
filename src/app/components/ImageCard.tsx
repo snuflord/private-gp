@@ -1,4 +1,4 @@
-import placeholderImg from "../../../public/placeholder-headshot.jpg"
+import placeholderImg from "../../../public/wdow_placeholder.webp"
 import Image from "next/image";
 
 export default function ImageCard() {
@@ -18,7 +18,7 @@ export default function ImageCard() {
                             alt="Picture of the author"
                             quality="100"
                             loading="lazy"
-                            className="object-contain w-full h-full"
+                            className="object-cover w-full h-full"
                         />
                     </div>
                 </div>
