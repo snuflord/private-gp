@@ -9,6 +9,7 @@ interface TextNode {
   text: string;
   underline?: boolean;
   bold?: boolean;
+  italic?: boolean;
 }
 
 interface LinkNode {
@@ -50,8 +51,12 @@ interface MediaData {
       medium?: ImageFormat;
       large?: ImageFormat;
     };
+    provider_metadata?: {
+      resource_type: string;
+    };
   };
 }
+
 
 interface MediaAttributes {
   data: MediaData[];
@@ -108,7 +113,8 @@ export default async function Page({ params }: { params: { id: string } }) {
                           key={childIndex}
                           style={{
                             textDecoration: child.underline ? 'underline' : 'none',
-                            fontWeight: child.bold ? 'bold' : 'normal'
+                            fontWeight: child.bold ? 'bold' : 'normal',
+                            fontStyle: child.italic ? 'italic' : 'normal'
                           }}
                         >
                           {child.text}
@@ -180,38 +186,51 @@ export default async function Page({ params }: { params: { id: string } }) {
           })}
         </div>
         <div>
-          {json && json.data.attributes.media.data ? (
-            <>
-              <Image
-                src={json.data.attributes.media.data[0].attributes.url}
-                alt="API Image"
-                width={1200}
-                height={675}
-                className="hidden md:block rounded-lg mt-5 md:w-full"
-                priority={true}
-                placeholder="empty"
-              />
-              <Image
-                src={json.data.attributes.media.data[0].attributes.formats.small?.url || defaultImage}
-                alt="API Image"
-                width={1200}
-                height={675}
-                className="block md:hidden rounded-lg mt-5 md:w-full"
-                priority={true}
-                placeholder="empty"
-              />
-            </>
-          ) : (
-            <Image
-              src={defaultImage}
-              alt="Default Image"
-              width={560}
-              height={620}
-              className="block rounded-lg mt-5 md:w-full"
-              priority={true}
-              placeholder="empty"
-            />
-          )}
+          <>
+            {json && json.data.attributes.media.data[0].attributes?.provider_metadata?.resource_type === 'image' ? (
+              <>
+                <div className="w-full md:w-1/3 overflow-hidden my-10">
+                  <Image
+                    src={json.data.attributes.media.data[0].attributes.url}
+                    alt="API Image"
+                    width={1200}
+                    height={675}
+                    className="hidden md:block rounded-lg mt-5 md:w-full"
+                    priority={true}
+                    placeholder="empty"
+                  />
+                  <Image
+                    src={json.data.attributes.media.data[0].attributes.formats.small?.url || defaultImage}
+                    alt="API Image"
+                    width={1200}
+                    height={675}
+                    className="block md:hidden rounded-lg mt-5 md:w-full"
+                    priority={true}
+                    placeholder="empty"
+                  />
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </>
+      
+          <>
+            {json && json.data.attributes.media.data[0].attributes?.provider_metadata?.resource_type === 'video' ? (
+              <>
+                <div className="md:w-1/2 my-10">
+                  <div className="video-container">
+                      <video width="100%" height="auto" controls poster="http://res.cloudinary.com/dyrs796wi/video/upload/c_scale,dl_200,vs_6,w_250/movie_example_a349bd8e32.gif">
+                        <source src="https://res.cloudinary.com/dyrs796wi/video/upload/v1727964236/movie_example_a349bd8e32.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
+                </div>
+              </>
+            ) : (
+              <></>
+            )}
+          </>
         </div>
       </div>
     </div>
