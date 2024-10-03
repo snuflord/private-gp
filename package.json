@@ -6,10 +6,10 @@
     "node": "20.9.0"
   },
   "scripts": {
-  "dev": "nvm exec 20.9.0 node -v && next dev -p 4000",
-  "build": "nvm exec 20.9.0 node -v && next build",
-  "start": "nvm exec 20.9.0 node -v && next start",
-  "lint": "next lint"
+    "dev": "nvm exec 20.9.0 node -v && next dev -p 4000",
+    "build": "next build",
+    "start": "nvm exec 20.9.0 node -v && next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
