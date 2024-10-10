@@ -11,6 +11,7 @@ export default function Navigation() {
   const menuItems = [
     { name: "Contact", href: "/contact" },
     { name: "Sexual Health", href: "/services/sexual-health" },
+    { name: "Something Health", href: "/services/sexual-health" },
   ];
 
   const dropDowns = [
@@ -37,7 +38,7 @@ export default function Navigation() {
             <DropdownTrigger>
               <Button
                 disableRipple
-                className="p-0 bg-transparent data-[hover=true]:bg-transparent hidden sm:block font-bold"
+                className="p-0 bg-transparent data-[hover=true]:bg-transparent hidden sm:block font-bold md:hover:underline underline-offset-4"
                 radius="sm"
                 variant="light"
               >
@@ -54,14 +55,14 @@ export default function Navigation() {
             }}
           >
             {dropDowns.map((item, index) => (
-              <DropdownItem key={`${item.name}-${index}`}>
-                <Link href={item.href}
-                >
+              <DropdownItem key={`${item.name}-${index}`} textValue={item.name}>
+                <Link href={item.href}>
                   {item.name}
                 </Link>
               </DropdownItem>
             ))}
-          </DropdownMenu>
+        </DropdownMenu>
+
         </Dropdown>
       </NavbarContent>
 
