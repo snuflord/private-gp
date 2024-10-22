@@ -4,7 +4,7 @@ const shimmer =
 
   export function CardSkeleton() {
     return (
-      <div className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-200 shadow-sm min-h-32 opacity-20`}>
+      <div className={`${shimmer} relative overflow-hidden bg-gray-200 shadow-sm min-h-32 opacity-20`}>
         <div className="bg-gray-300 rounded-lg p-4 h-full flex items-center justify-center">
             <span className="font-bold text-black">Media Loading</span>
         </div>

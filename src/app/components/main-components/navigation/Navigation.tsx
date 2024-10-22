@@ -1,25 +1,60 @@
 'use client'
 
-import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import { getPagesNames } from "@/app/lib/allDataPages";
+import { useEffect, useState } from "react";
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [pagesList, setPagesList] = useState([]);
 
-  const menuItems = [
-    { name: "Contact", href: "/contact" },
-    { name: "Sexual Health", href: "/services/sexual-health" },
-    { name: "Something Health", href: "/services/sexual-health" },
-  ];
+  useEffect(() => {
+    const fetchPageNames = async () => {
+        try {
+          const json = await getPagesNames();
+          setPagesList(json.data);
+          console.log(json.data)
 
-  const dropDowns = [
-    { name: "Sexual Health", href: "/services/sexual-health" },
-    { name: "Something Health", href: "/services/sexual-health" },
-    { name: "Nothing Health", href: "/services/sexual-health" },
-    { name: "Everything Health", href: "/services/sexual-health" },
-  ];
+          // setLoading(false); // Set loading to false after data is fetched
+        } catch (error) {
+          console.error('Error fetching pages:', error);
+        }
+    };
+
+    fetchPageNames();
+  }, []);
+
+  console.log(`The pages list includes ${JSON.stringify(pagesList)}`);
+
+  // Mobile:
+  // const menuItems = [
+  //   { name: "Contact", href: "/contact" },
+  //   { name: "About", href: "/about" },
+  //   { name: "Sexual Health", href: "/services/sexual-health" },
+  //   { name: "Something Health", href: "/services/sexual-health" },
+  //   { name: "Nothing Health", href: "/services/sexual-health" },
+  //   { name: "Everything Health", href: "/services/sexual-health" },
+  // ];
+
+  const menuItems = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
+    name: page.Title,
+    href: `/services/${page.documentId}`,
+  }));
+
+  // In the dropdown list:
+  // const dropDowns = [
+  //   { name: "Sexual Health", href: "/services/sexual-health" },
+  //   { name: "Something Health", href: "/services/sexual-health" },
+  //   { name: "Nothing Health", href: "/services/sexual-health" },
+  //   { name: "Everything Health", href: "/services/sexual-health" },
+  // ];
+
+  const dropDowns = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
+    name: page.Title,
+    href: `/services/${page.documentId}`,
+  }));
 
   return (
     <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={() => setIsMenuOpen(!isMenuOpen)}>
@@ -61,9 +96,15 @@ export default function Navigation() {
                 </Link>
               </DropdownItem>
             ))}
-        </DropdownMenu>
-
+          </DropdownMenu>
         </Dropdown>
+
+        <NavbarItem className="hidden sm:block">
+          <Link color="foreground" href="/about">
+            About
+          </Link>
+        </NavbarItem>
+
       </NavbarContent>
 
       <NavbarContent justify="end">
@@ -94,4 +135,8 @@ export default function Navigation() {
       </NavbarMenu>
     </Navbar>
   );
+}
+
+function setLoading(arg0: boolean) {
+  throw new Error("Function not implemented.");
 }
