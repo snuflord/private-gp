@@ -1,6 +1,6 @@
 'use client'
 
-import { getArticles } from "../lib/alldata"
+import { getArticles } from "../lib/allDataArticles"
 import { Key, Suspense, useEffect, useState } from "react"
 import { CardSkeleton } from "./UI/skeletons";
 import { Card } from "./UI/AllCards";
