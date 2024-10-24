@@ -39,10 +39,10 @@ export async function getPages() {
 }
 
 // single page
-export async function getPage(id: string, revalidate = false) {
-    console.log(`ID: ${id} passed ass prop on request`)
+export async function getPage(slug: string, revalidate = false) {
+    console.log(`ID: ${slug} passed ass prop on request`)
     console.log(API_URL);
-    const res = await fetch(`${API_URL}/pages/${id}?[populate]=*`, {
+    const res = await fetch(`${API_URL}/pages/${slug}?[populate]=*`, {
       headers: {
         'Next-Cache-Tags': 'article'
       },

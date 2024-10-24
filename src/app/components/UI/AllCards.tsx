@@ -13,7 +13,7 @@ export function Card({article}: {article: any}) {
     //   : data.description;
 
     return (
-        <Link href={`/articles/${data.documentId}`} className="group transition duration-300 border-solid border-2 border-slate-800 dark:border-white dark:bg-slate-800 p-4 w-full min-h-32 h-full flex flex-col">
+        <Link href={`/articles/${data.slug}`} className="group transition duration-300 border-solid border-2 border-slate-800 dark:border-white dark:bg-slate-800 p-4 w-full min-h-32 h-full flex flex-col">
 
             <div className="flex flex-col md:flex-row justify-between">
                 <h3 className="text-xs md:text-base font-bold mb-2 w-full md:max-w-[60%]">{data.title}</h3>

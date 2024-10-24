@@ -115,14 +115,12 @@ interface ArticleData {
 
 
 // Generates Metadata for dynamic page.
-export async function generateMetadata({ params }: { params: { documentId: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   
-  const documentId = params.documentId;
-  
-  const articleId = documentId;
+  const articleSlug = params.slug;
 
   // Fetch the article data
-  const json = await getArticle(articleId, true);
+  const json = await getArticle(articleSlug, true);
   const article = json?.data;
 
   if (!article) {
@@ -138,7 +136,7 @@ export async function generateMetadata({ params }: { params: { documentId: strin
     openGraph: {
       title: article.title,
       description: article.description[0]?.children[0]?.text || "Private GP UK Article",
-      url: `http://localhost:4000/${documentId}`,
+      url: `http://localhost:4000/${articleSlug}}`,
       images: [
         {
           url: article.media?.data?.[0]?.formats?.medium?.url || 'default-image-url',
@@ -151,17 +149,17 @@ export async function generateMetadata({ params }: { params: { documentId: strin
   };
 }
 
-export default async function Page({ params }: { params: { documentId: string } }) {
+export default async function Page({ params }: { params: { slug: string } }) {
   
-  const articleId = params.documentId;
-  console.log(`Here is the documentId - ${articleId} - coming in dynamically`);
+  const articleSlug = params.slug;
+  console.log(`Here is the slug - ${articleSlug} - coming in dynamically`);
 
-  if (!articleId) {
+  if (!articleSlug) {
     notFound();
     return null;
   }
 
-  const json: {media: any; data: ArticleData } = await getArticle(articleId, true);
+  const json: {media: any; data: ArticleData } = await getArticle(articleSlug, true);
   const article = json?.data;
 
   if (!article) {

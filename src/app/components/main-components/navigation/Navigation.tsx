@@ -40,7 +40,7 @@ export default function Navigation() {
 
   const menuItems = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
     name: page.Title,
-    href: `/services/${page.documentId}`,
+    href: `/services/${page.slug}`,
   }));
 
   // In the dropdown list:
@@ -53,7 +53,7 @@ export default function Navigation() {
 
   const dropDowns = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
     name: page.Title,
-    href: `/services/${page.documentId}`,
+    href: `/services/${page.slug}`,
   }));
 
   return (
