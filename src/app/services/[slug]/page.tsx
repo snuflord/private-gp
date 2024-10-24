@@ -18,7 +18,7 @@ import {
     ListNode,
     ListItemNode,
     DescriptionNode,
-    ArticleData
+    PageData
 } from "../../types/pageTypes";
 
 
@@ -60,17 +60,17 @@ import {
 //   };
 // }
 
-export default async function Page({ params }: { params: { documentId: string } }) {
+export default async function Page({ params }: { params: { slug: string } }) {
   
-  const pageId = params.documentId;
-  console.log(`Here is the documentId - ${pageId} - coming in dynamically`);
+  const pageSlug = params.slug;
+  console.log(`Here is the documentId - ${pageSlug} - coming in dynamically`);
 
-  if (!pageId) {
+  if (!pageSlug) {
     notFound();
     return null;
   }
 
-  const json: {media: any; data: ArticleData } = await getPage(pageId, true);
+  const json: {media: any; data: PageData } = await getPage(pageSlug, true);
   const page = json?.data;
 
   console.log(page);

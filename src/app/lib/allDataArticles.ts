@@ -91,10 +91,10 @@ export async function getArticles({ page }: { page?: number | undefined }) {
 }
 
 // single article
-export async function getArticle(id: string, revalidate = false) {
-  console.log(`ID: ${id} passed ass prop on request`)
+export async function getArticle(slug: string, revalidate = false) {
+  console.log(`slug: ${slug} passed ass prop on request`)
   console.log(API_URL);
-  const res = await fetch(`${API_URL}/articles/${id}?[populate]=*`, {
+  const res = await fetch(`${API_URL}/articles/slug/${slug}?[populate]=*`, {
     headers: {
       'Next-Cache-Tags': 'article'
     },

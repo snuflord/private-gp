@@ -1,12 +1,13 @@
 // TYPE DEFINITIONS FOR ARTICLE DATA
 
+// nested in ImageFormat
 export interface ProviderMetadata {
     public_id: string;
     resource_type: string;
-}
-  
-  // Defining the format for images with a shared interface
-export interface ImageFormat {
+  }
+    
+  // Defining the format for images with a shared interface - nested in MediaData
+  export interface ImageFormat {
     name: string;
     hash: string;
     ext: string;
@@ -19,9 +20,9 @@ export interface ImageFormat {
     url: string;
     provider_metadata: ProviderMetadata;
   }
-  
-  // MediaData representing an individual media item
-export interface MediaData {
+    
+  // MediaData representing an individual media item - nested in ArticleData
+  export interface MediaData {
     id: number;
     name: string;
     alternativeText: string;
@@ -47,49 +48,49 @@ export interface MediaData {
     documentId: string;
     locale: string | null;
     publishedAt: string | null;
-  }
-  
-  
+    }
+    
+    
   // Text node within the description
-export  interface TextNode {
+  export interface TextNode {
     type: 'text';
     text: string;
     underline?: boolean;
     bold?: boolean;
     italic?: boolean;
   }
-  
-  // Link node, which contains text nodes
-export  interface LinkNode {
+    
+    // Link node, which contains text nodes
+  export interface LinkNode {
     type: 'link';
     url: string;
     children: TextNode[];
   }
-  
+    
   // Paragraph node can contain text or links
-export  interface ParagraphNode {
+  export interface ParagraphNode {
     type: 'paragraph';
     children: (TextNode | LinkNode)[];
   }
-  
+    
   // List node for ordered or unordered lists
-export  interface ListNode {
+  export interface ListNode {
     type: 'list';
     format: 'unordered' | 'ordered';
     children: ListItemNode[];
   }
-  
+    
   // Individual list items
- export interface ListItemNode {
+  export interface ListItemNode {
     type: 'list-item';
     children: (TextNode | LinkNode)[];
   }
-  
+    
   // DescriptionNode can either be a paragraph or a list
-export  type DescriptionNode = ParagraphNode | ListNode;
-  
-  // Main ArticleData interface
-export  interface ArticleData {
+  export type DescriptionNode = ParagraphNode | ListNode;
+    
+  // Main Page interface
+  export interface PageData {
     Youtube: string | null;
     id: number;
     Title: string;
