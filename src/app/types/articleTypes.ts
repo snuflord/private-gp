@@ -1,12 +1,10 @@
-// TYPE DEFINITIONS FOR ARTICLE DATA
-
-// nested in ImageFormat
+// Grouping provider metadata
 export interface ProviderMetadata {
   public_id: string;
   resource_type: string;
 }
-  
-// Defining the format for images with a shared interface - nested in MediaData
+
+// Defining the format for images with a shared interface
 export interface ImageFormat {
   name: string;
   hash: string;
@@ -20,8 +18,8 @@ export interface ImageFormat {
   url: string;
   provider_metadata: ProviderMetadata;
 }
-  
-// MediaData representing an individual media item - nested in ArticleData
+
+// MediaData representing an individual media item
 export interface MediaData {
   id: number;
   name: string;
@@ -48,9 +46,9 @@ export interface MediaData {
   documentId: string;
   locale: string | null;
   publishedAt: string | null;
-  }
-  
-  
+}
+
+
 // Text node within the description
 export interface TextNode {
   type: 'text';
@@ -59,41 +57,42 @@ export interface TextNode {
   bold?: boolean;
   italic?: boolean;
 }
-  
-  // Link node, which contains text nodes
+
+// Link node, which contains text nodes
 export interface LinkNode {
   type: 'link';
   url: string;
   children: TextNode[];
 }
-  
+
 // Paragraph node can contain text or links
 export interface ParagraphNode {
   type: 'paragraph';
   children: (TextNode | LinkNode)[];
 }
-  
+
 // List node for ordered or unordered lists
 export interface ListNode {
   type: 'list';
   format: 'unordered' | 'ordered';
   children: ListItemNode[];
 }
-  
+
 // Individual list items
 export interface ListItemNode {
   type: 'list-item';
   children: (TextNode | LinkNode)[];
 }
-  
+
 // DescriptionNode can either be a paragraph or a list
 export type DescriptionNode = ParagraphNode | ListNode;
-  
+
 // Main ArticleData interface
 export interface ArticleData {
   Youtube: string | null;
   id: number;
   title: string;
+  Hero: MediaData; 
   description: DescriptionNode[]; // Array of description nodes
   createdAt: string;
   updatedAt: string;

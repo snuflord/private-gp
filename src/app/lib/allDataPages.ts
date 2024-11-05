@@ -19,6 +19,24 @@ export async function getPagesNames() {
     return data;
 }
 
+export async function getPagesSlugs() {
+  
+    const res = await fetch(`${API_URL}/pages?fields[0]=slug`);
+  
+    if (!res.ok) {
+      throw new Error('Failed to fetch page data');
+    }
+  
+    const data = await res.json();
+
+    if (!data || !data.data) {
+      console.log('No pages found or invalid response structure:', data);
+      return null;
+    }
+  
+    return data;
+}
+
 // all pages
 export async function getPages() {
   

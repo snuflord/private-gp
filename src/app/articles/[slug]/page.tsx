@@ -1,4 +1,4 @@
-import { getArticle } from "@/app/lib/allDataArticles";
+import { getArticle, getLatestArticles } from "@/app/lib/allDataArticles";
 import Image from "next/image";
 import defaultImage from '../../../../public/luxury-office.webp';
 import { Metadata } from 'next';
@@ -7,111 +7,19 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Key } from "react";
 
 // TypeScript Interfaces
-
-// Grouping provider metadata
-interface ProviderMetadata {
-  public_id: string;
-  resource_type: string;
-}
-
-// Defining the format for images with a shared interface
-interface ImageFormat {
-  name: string;
-  hash: string;
-  ext: string;
-  mime: string;
-  path: string | null;
-  width: number;
-  height: number;
-  size: number;
-  sizeInBytes: number;
-  url: string;
-  provider_metadata: ProviderMetadata;
-}
-
-// MediaData representing an individual media item
-interface MediaData {
-  id: number;
-  name: string;
-  alternativeText: string;
-  caption: string;
-  width: number;
-  height: number;
-  formats: {
-    thumbnail?: ImageFormat;
-    small?: ImageFormat;
-    medium?: ImageFormat;
-    large?: ImageFormat;
-  };
-  hash: string;
-  ext: string;
-  mime: string;
-  size: number;
-  url: string;
-  previewUrl: string | null;
-  provider: string;
-  provider_metadata: ProviderMetadata;
-  createdAt: string;
-  updatedAt: string;
-  documentId: string;
-  locale: string | null;
-  publishedAt: string | null;
-}
-
-
-// Text node within the description
-interface TextNode {
-  type: 'text';
-  text: string;
-  underline?: boolean;
-  bold?: boolean;
-  italic?: boolean;
-}
-
-// Link node, which contains text nodes
-interface LinkNode {
-  type: 'link';
-  url: string;
-  children: TextNode[];
-}
-
-// Paragraph node can contain text or links
-interface ParagraphNode {
-  type: 'paragraph';
-  children: (TextNode | LinkNode)[];
-}
-
-// List node for ordered or unordered lists
-interface ListNode {
-  type: 'list';
-  format: 'unordered' | 'ordered';
-  children: ListItemNode[];
-}
-
-// Individual list items
-interface ListItemNode {
-  type: 'list-item';
-  children: (TextNode | LinkNode)[];
-}
-
-// DescriptionNode can either be a paragraph or a list
-type DescriptionNode = ParagraphNode | ListNode;
-
-// Main ArticleData interface
-interface ArticleData {
-  Youtube: string | null;
-  id: number;
-  title: string;
-  description: DescriptionNode[]; // Array of description nodes
-  createdAt: string;
-  updatedAt: string;
-  media: MediaData[]; // Nested media attributes
-  slug: string;
-  documentId: string;
-  locale: string | null;
-  publishedAt: string | null;
-  localizations: any[]; // Assuming an array for localizations
-}
+import {
+  ProviderMetadata,
+  ImageFormat,
+  MediaData,
+  TextNode,
+  LinkNode,
+  ParagraphNode,
+  ListNode,
+  ListItemNode,
+  DescriptionNode,
+  ArticleData
+} from "../../types/articleTypes";
+import Link from "next/link";
 
 
 // Generates Metadata for dynamic page.
@@ -162,6 +70,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const json: {media: any; data: ArticleData } = await getArticle(articleSlug, true);
   const article = json?.data;
 
+  const latestArticles = await getLatestArticles();
+  const latestArticlesArr = await latestArticles;
+
   if (!article) {
     notFound();
     return null;
@@ -170,17 +81,46 @@ export default async function Page({ params }: { params: { slug: string } }) {
     return (
       <div className="container mx-auto px-4 mt-12 max-w-5xl">
         <div className="md:min-h-[60vh]">
-          <div className="flex flex-col md:flex-row md:justify-between">
-            <h1 className="text-3xl mb-10 md:text-4xl font-bold">{article.title}</h1>
-            <div className="md:space-x-2 flex flex-col md:flex-row md:items-center">
-              <span className="font-semibold">
-                Posted: {new Date(article.createdAt).toLocaleDateString("en-UK")}
-              </span>
-              <span className="font-semibold">
-                Updated: {new Date(article.updatedAt).toLocaleDateString("en-UK")}
-              </span>
-            </div>
+          <div className="flex flex-col md:flex-row md:justify-between mb-5">
+            <span className="font-semibold">
+              Posted: {new Date(article.createdAt).toLocaleDateString("en-UK")}
+            </span>
+            <span className="font-semibold">
+              Updated: {new Date(article.updatedAt).toLocaleDateString("en-UK")}
+            </span>
           </div>
+
+          <div className="flex w-100">
+            <h1 className="text-3xl mb-5 md:text-4xl lg:text-6xl font-bold">{article.title}</h1>
+          </div>
+
+          {json && json.data.Hero ? (
+            <div key={(json.data.Hero as MediaData)?.id} className="my-10 overflow-hidden">
+              <div className="w-full">
+                <Image
+                  src={(json.data.Hero as MediaData).url}
+                  alt={(json.data.Hero as MediaData).name || "API Image"}
+                  width={1200}
+                  height={675}
+                  className="hidden md:block w-full h-full object-cover aspect-video"
+                  priority={true}
+                  placeholder="empty"
+                />
+                <Image
+                  src={(json.data.Hero as MediaData).formats.small?.url || defaultImage}
+                  alt={(json.data.Hero as MediaData).name || "API Image"}
+                  width={1200}
+                  height={675}
+                  className="block md:hidden w-full h-full object-cover aspect-video"
+                  priority={true}
+                  placeholder="empty"
+                />
+              </div>
+          </div>
+          ) 
+          : (<></>)
+          }
+          
           <div>
             {article.description.map((descItem, index) => {
               if (descItem.type === 'paragraph') {
@@ -275,7 +215,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                   <div className="flex space-x-2 md:space-x-10">
                   {/* If data.media is an array, map multiple mediaItems */}
                     {Array.isArray(json.data.media) ? json.data.media.map((mediaItem: MediaData) => (
-                      <div key={mediaItem.id} className="mb-5 md:mb-0 rounded-lg overflow-hidden">
+                      <div key={mediaItem.id} className="mb-5 md:mb-0 overflow-hidden">
                         <Image
                           src={mediaItem.url}
                           alt={mediaItem.name || "API Image"}
@@ -297,7 +237,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                       </div>
                     )) : (
                       // If it's not an array, handle the single media object- By using 'as MediaData', explicitly tell TypeScript json.data.media is a single MediaData object in this case.
-                      <div key={(json.data.media as MediaData).id} className="mb-5 md:mb-0 rounded-lg overflow-hidden">
+                      <div key={(json.data.media as MediaData).id} className="mb-5 md:mb-0 overflow-hidden">
                         <Image
                           src={(json.data.media as MediaData).url}
                           alt={(json.data.media as MediaData).name || "API Image"}
@@ -365,6 +305,27 @@ export default async function Page({ params }: { params: { slug: string } }) {
               <></>
             )}
           </div>
+
+          {latestArticlesArr.length > 0 ? (
+            <>
+              <h2 className="text-2xl font-bold my-5">Latest Articles</h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5">
+                {latestArticlesArr.map((articleItem: ArticleData) => (
+                  <div className="my-5 bg-slate-800 flex" key={articleItem.id}>
+                    <Link href={`/articles/${articleItem.slug}`} className="h-full w-full p-5">
+                      <h3 className="text-xl font-semibold mb-2">{articleItem.title}</h3>
+                      <p className="text-sm">
+                        {articleItem.description[0]?.children[0]?.type === 'text' ? articleItem.description[0].children[0].text : ''}
+                      </p>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <></>
+          )}          
         </div>
       </div>
     );

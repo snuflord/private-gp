@@ -1,4 +1,4 @@
-import { getPage } from "@/app/lib/allDataPages";
+import { getPage, getPagesSlugs } from "@/app/lib/allDataPages";
 import Image from "next/image";
 import defaultImage from '../../../../public/luxury-office.webp';
 import { Metadata } from 'next';
@@ -21,44 +21,54 @@ import {
     PageData
 } from "../../types/pageTypes";
 
+// This function generates static parameters for each service page
+export async function generateStaticParams() {
+  
+  const slugs = await getPagesSlugs();
+  const slugArray = Array.from(slugs) as string[];
+  console.log("Generated static params:", slugArray);
+
+  return slugArray.map((slug): { slug: string } => ({
+    slug,
+  }));
+}
+
 
 
 // Generates Metadata for dynamic page.
-// export async function generateMetadata({ params }: { params: { documentId: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   
-//   const documentId = params.documentId;
-  
-//   const articleId = documentId;
+  const pageSlug = params.slug;
 
-//   // Fetch the article data
-//   const json = await getArticle(articleId, true);
-//   const article = json?.data;
+  // Fetch the page data
+  const json = await getPage(pageSlug, true);
+  const page = json?.data;
 
-//   if (!article) {
-//     return {
-//       title: "Article Not Found",
-//       description: "The article you're looking for doesn't exist.",
-//     };
-//   }
+  if (!page) {
+    return {
+      title: "page Not Found",
+      description: "The page you're looking for doesn't exist.",
+    };
+  }
 
-//   return {
-//     title: article.title,
-//     description: `Read more about: ${article.title}`, // Customize this as needed
-//     openGraph: {
-//       title: article.title,
-//       description: article.description[0]?.children[0]?.text || "Private GP UK Article",
-//       url: `http://localhost:4000/${documentId}`,
-//       images: [
-//         {
-//           url: article.media?.data?.[0]?.formats?.medium?.url || 'default-image-url',
-//           width: 800,
-//           height: 600,
-//           alt: article.title,
-//         },
-//       ],
-//     },
-//   };
-// }
+  return {
+    title: page.Title,
+    description: `Read more about: ${page.Title}`, // Customize this as needed
+    openGraph: {
+      title: page.Title,
+      description: page.Description || "Page description",
+      url: `http://localhost:4000/${page.slug}`,
+      images: [
+        {
+          url: page.media?.data?.[0]?.formats?.medium?.url || 'default-image-url',
+          width: 800,
+          height: 600,
+          alt: page.Title,
+        },
+      ],
+    },
+  };
+}
 
 export default async function Page({ params }: { params: { slug: string } }) {
   
