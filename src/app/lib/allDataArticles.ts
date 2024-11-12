@@ -53,7 +53,7 @@ export async function getFilteredArticles({ query }: { query: QueryParams }) {
 
 // latest articles
 export async function getLatestArticles() {
-  const res = await fetch(`${API_URL}/articles?populate=*&pagination[limit]=5&sort[0]=createdAt:desc`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/articles?populate=*&pagination[limit]=3&sort[0]=createdAt:desc`, { cache: 'no-store' });
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -73,7 +73,7 @@ export async function getArticles({ page }: { page?: number | undefined }) {
   const pageNumber = page !== undefined ? page : '1'; // Use page value if provided, otherwise default to 1
 
   const res = await fetch(
-    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=9&sort[0]=createdAt:desc&[populate]=*`,
+    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=3&sort[0]=createdAt:desc&[populate]=*`,
     { cache: 'no-store' }
   );
 
@@ -115,6 +115,25 @@ export async function getArticle(slug: string, revalidate = false) {
 
   console.log(json.data)
   return json;
+}
+
+// Pages slugs
+export async function getArticleSlugs() {
+  
+  const res = await fetch(`${API_URL}/articles?fields[0]=slug`);
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch page data');
+  }
+
+  const data = await res.json();
+
+  if (!data || !data.data) {
+    console.log('No pages found or invalid response structure:', data);
+    return null;
+  }
+
+  return data;
 }
 
 // user articles - limited  (in LargeCard)

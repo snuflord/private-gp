@@ -91,9 +91,9 @@ export interface ProviderMetadata {
     
   // Main Page interface
   export interface PageData {
-    Youtube: string | null;
+    youtube: string | null;
     id: number;
-    Title: string;
+    title: string;
     description: DescriptionNode[]; // Array of description nodes
     createdAt: string;
     updatedAt: string;

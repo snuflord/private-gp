@@ -25,7 +25,7 @@ export default function Footer() {
               <div className="grid grid-rows-1 grid-cols-1 md:grid-cols-3 gap-6 md:gap-12 w-full">
                   <div className="my-5 flex flex-col">
                       <Link className="mt-2" href="/terms-conditions">Terms and Conditions</Link>
-                      <Link className="mt-2" href="https://drsknn.store/" target="_blank">Book</Link>
+                      <Link className="mt-2" href="/" target="_blank">Book</Link>
                   </div>
                   <div className="my-5 flex flex-col">
                       <Link className="mt-2" href="/terms-conditions">Another Link</Link>

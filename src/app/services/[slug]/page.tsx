@@ -52,10 +52,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: page.Title,
-    description: `Read more about: ${page.Title}`, // Customize this as needed
+    title: page.title,
+    description: `Read more about: ${page.title}`,
     openGraph: {
-      title: page.Title,
+      title: page.title,
       description: page.Description || "Page description",
       url: `http://localhost:4000/${page.slug}`,
       images: [
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
           url: page.media?.data?.[0]?.formats?.medium?.url || 'default-image-url',
           width: 800,
           height: 600,
-          alt: page.Title,
+          alt: page.title,
         },
       ],
     },
@@ -94,7 +94,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <div className="container mx-auto px-4 mt-12 max-w-5xl">
         <div className="md:min-h-[60vh]">
           <div className="flex flex-col md:flex-row md:justify-between">
-            <h1 className="text-3xl mb-10 md:text-4xl font-bold">{page.Title}</h1>
+            <h1 className="text-3xl mb-10 md:text-4xl font-bold">{page.title}</h1>
           </div>
         </div>
       </div>

@@ -1,10 +1,8 @@
-import { getArticle, getLatestArticles } from "@/app/lib/allDataArticles";
+import { getArticle, getArticleSlugs, getLatestArticles } from "@/app/lib/allDataArticles";
 import Image from "next/image";
 import defaultImage from '../../../../public/luxury-office.webp';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation'
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { Key } from "react";
 
 // TypeScript Interfaces
 import {
@@ -20,7 +18,40 @@ import {
   ArticleData
 } from "../../types/articleTypes";
 import Link from "next/link";
+import { Suspense } from "react";
+import { Card } from "@/app/components/UI/AllCards";
+import { CardSkeleton } from "@/app/components/UI/skeletons";
 
+export async function generateStaticParams() {
+  
+  const slugs = await getArticleSlugs();
+  const slugArray = Array.from(slugs) as string[];
+  console.log("Generated static params:", slugArray);
+
+  return slugArray.map((slug): { slug: string } => ({
+    slug,
+  }));
+}
+
+export async function getStaticProps({ params }: { params: { slug: string } }) {
+  try {
+    const articleSlug = params.slug;
+    const json = await getArticle(articleSlug, true);
+    const article = json?.data;
+
+    if (!article) {
+      return { notFound: true };
+    }
+
+    return {
+      props: { article },
+      revalidate: 600,
+    };
+  } catch (error) {
+    console.error("Failed to fetch article:", error);
+    return { notFound: true };
+  }
+}
 
 // Generates Metadata for dynamic page.
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -40,7 +71,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   return {
     title: article.title,
-    description: `Read more about: ${article.title}`, // Customize this as needed
+    description: `Read more about: ${article.title}`,
     openGraph: {
       title: article.title,
       description: article.description[0]?.children[0]?.text || "Private GP UK Article",
@@ -209,7 +240,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             <>
             {/* IMAGES */}
             {/* If there is data, and if the media items resource type is image... truth check then render */}
-            {json && json.data.media.some((mediaItem: MediaData) => mediaItem.provider_metadata.resource_type === 'image') ? (
+            {json.data.media && json.data.media.some((mediaItem: MediaData) => mediaItem.provider_metadata.resource_type === 'image') ? (
               <>
                 <div className="w-full md:w-1/2 overflow-hidden my-10 mx-auto">
                   <div className="flex space-x-2 md:space-x-10">
@@ -308,18 +339,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
           {latestArticlesArr.length > 0 ? (
             <>
-              <h2 className="text-2xl font-bold my-5">Latest Articles</h2>
+              <h2 className="text-2xl font-bold my-10">Latest Articles</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5">
-                {latestArticlesArr.map((articleItem: ArticleData) => (
-                  <div className="my-5 bg-slate-800 flex" key={articleItem.id}>
-                    <Link href={`/articles/${articleItem.slug}`} className="h-full w-full p-5">
-                      <h3 className="text-xl font-semibold mb-2">{articleItem.title}</h3>
-                      <p className="text-sm">
-                        {articleItem.description[0]?.children[0]?.type === 'text' ? articleItem.description[0].children[0].text : ''}
-                      </p>
-                    </Link>
-                  </div>
+                {latestArticlesArr.map((articleItem: ArticleData ) => (
+                  
+                  <Suspense key={articleItem.id} fallback={<CardSkeleton/>}>
+                    <Card key={articleItem.id} article={articleItem} />
+                  </Suspense>
+                
                 ))}
               </div>
             </>

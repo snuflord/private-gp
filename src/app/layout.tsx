@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "./globals.css";
+import Head from "next/head";
 import Navigation from "./components/main-components/navigation/Navigation";
 import Footer from "./components/main-components/Footer";
+
 
 // Import Ubuntu font
 const ubuntu = Ubuntu({
@@ -33,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+        <link rel="icon" href="/icon?<generated>" type="image/png" sizes="32x32" />
       </head>
       <body className={`${ubuntu.className} bg-white text-black dark:bg-stone-950 dark:text-white`}>
         <Navigation />
