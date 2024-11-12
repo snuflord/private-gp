@@ -1,32 +1,44 @@
 'use client'
 
+type PageList = {
+  title: string;
+  slug: string;
+  documentId: string;
+};
+
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu } from "@nextui-org/react";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { getPagesNames } from "@/app/lib/allDataPages";
-import { useEffect, useState } from "react";
+import { getGlobalLogo } from "@/app/lib/globalData";
+import { useEffect, useState, useMemo } from "react";
+import Image from "next/image";
+import { MdEmail } from "react-icons/md";
+import { HiOutlineChevronRight } from "react-icons/hi2";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [pagesList, setPagesList] = useState([]);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [servicePagesList, setServicePagesList] = useState<PageList[]>([]);
+  const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
-    const fetchPageNames = async () => {
-        try {
-          const json = await getPagesNames();
-          setPagesList(json.data);
-          console.log(json.data)
+    const fetchData = async () => {
+      try {
+        const pagesResponse = await getPagesNames();
+        setServicePagesList(pagesResponse.data);
 
-          // setLoading(false); // Set loading to false after data is fetched
-        } catch (error) {
-          console.error('Error fetching pages:', error);
-        }
+        const logoResponse = await getGlobalLogo();
+        setLogoUrl(logoResponse || "");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    fetchPageNames();
+    fetchData();
   }, []);
 
-  console.log(`The pages list includes ${JSON.stringify(pagesList)}`);
+  console.log(`The pages list includes ${JSON.stringify(servicePagesList)}`);
 
   // Mobile:
   // const menuItems = [
@@ -38,23 +50,32 @@ export default function Navigation() {
   //   { name: "Everything Health", href: "/services/sexual-health" },
   // ];
 
-  const menuItems = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
-    name: page.Title,
+  const serviceItems = useMemo(() => servicePagesList.map((page) => ({
+    name: page.title,
     href: `/services/${page.slug}`,
-  }));
+  })),
+   [servicePagesList]);
 
-  // In the dropdown list:
-  // const dropDowns = [
-  //   { name: "Sexual Health", href: "/services/sexual-health" },
-  //   { name: "Something Health", href: "/services/sexual-health" },
-  //   { name: "Nothing Health", href: "/services/sexual-health" },
-  //   { name: "Everything Health", href: "/services/sexual-health" },
-  // ];
 
-  const dropDowns = pagesList.map((page: { Title: string, slug: string, documentId: string }) => ({
-    name: page.Title,
-    href: `/services/${page.slug}`,
-  }));
+  const logoElement = useMemo(() => (
+    <>
+      {logoUrl && logoUrl !== '' ? (
+      <Link href="/" className="flex items-center h-[25px] w-[75px] md:h-[50px] md:w-[150px]">
+        <Image 
+          src={logoUrl} 
+          alt="brand home page main navigation logo"
+          width={150} 
+          height={50}
+          className="object-contain md:hover:scale-105 transition-transform duration-300"
+        />
+      </Link>
+      ) : (
+        <Link href="/" className="flex items-center font-bold">
+            HOME
+        </Link>
+      )}
+      </>
+  ), [logoUrl]);
 
   return (
     <Navbar isMenuOpen={isMenuOpen} onMenuOpenChange={() => setIsMenuOpen(!isMenuOpen)}>
@@ -65,8 +86,20 @@ export default function Navigation() {
           onClick={() => setIsMenuOpen(isMenuOpen)}
         />
         <NavbarBrand className="grow-0">
-          <Link href="/" className="font-bold text-inherit">HOME</Link>
+          {logoElement}
         </NavbarBrand>
+
+        <NavbarItem className="hidden sm:block">
+          <Link className="font-bold" color="foreground" href="/about">
+            About
+          </Link>
+        </NavbarItem>
+
+        <NavbarItem className="hidden sm:block">
+          <Link className="font-bold" color="foreground" href="/meet-the-team">
+            Meet the Team
+          </Link>
+        </NavbarItem>
 
         <Dropdown >
           <NavbarItem>
@@ -82,16 +115,17 @@ export default function Navigation() {
             </DropdownTrigger>
           </NavbarItem>
 
+          {/* THE DESKTOP DROPDOWN MENU */}
           <DropdownMenu
             aria-label="ACME features"
             className="w-[340px]"
             itemClasses={{
               base: "gap-4",
             }}
-          >
-            {dropDowns.map((item, index) => (
+            >
+            {serviceItems.map((item, index) => (
               <DropdownItem key={`${item.name}-${index}`} textValue={item.name}>
-                <Link href={item.href}>
+                <Link className="font-bold text-1xl" href={item.href}>
                   {item.name}
                 </Link>
               </DropdownItem>
@@ -99,39 +133,57 @@ export default function Navigation() {
           </DropdownMenu>
         </Dropdown>
 
-        <NavbarItem className="hidden sm:block">
-          <Link color="foreground" href="/about">
-            About
-          </Link>
-        </NavbarItem>
-
       </NavbarContent>
 
       <NavbarContent justify="end">
         <NavbarItem isActive>
-          <Link color="foreground" href="/contact">
-            Contact
+          <Link className="flex space-x-2 items-center group" color="foreground" href="/contact">
+            <span className="hidden md:block md:group-hover:text-blue-500 transition-colors duration-300">Contact</span>
+            <MdEmail className="block text-2xl md:text-xl md:group-hover:text-blue-500 transition-colors duration-300"/>
           </Link>
         </NavbarItem>
 
-        <NavbarItem>
+        <NavbarItem className="flex">
           <ThemeToggle />
         </NavbarItem>
       </NavbarContent>
 
+      {/* THE WHOLE MOBILE MENU */}
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item.name}-${index}`}>
-            <Link
-              color={index === 2 ? "primary" : menuItems.length - 1 === index ? "danger" : "foreground"}
-              className="w-full"
-              href={item.href}
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
+        <NavbarMenuItem>
+          <Link className="font-bold" color="foreground" href="/about">
+            About
+          </Link>
+        </NavbarMenuItem>
+
+        <NavbarMenuItem>
+          <Link className="font-bold" color="foreground" href="/meet-the-team">
+            Meet the Team
+          </Link>
+        </NavbarMenuItem>
+
+        {/* Services Accordion */}
+        <NavbarMenuItem>
+          <Button
+            disableRipple
+            className="p-0 bg-transparent font-bold flex"
+            onClick={() => setIsServicesOpen(!isServicesOpen)} // Toggle the accordion
+          >
+            Services
+            <HiOutlineChevronRight />
+          </Button>
+        </NavbarMenuItem>
+
+        {isServicesOpen && ( // Conditional rendering of service items
+          <div className="flex flex-col pl-4"> {/* Add padding or styling as needed */}
+            {serviceItems.map((item, index) => (
+              <Link key={`${item.name}-${index}`} className="font-bold text-lg" href={item.href}>
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        )}
+            
       </NavbarMenu>
     </Navbar>
   );
