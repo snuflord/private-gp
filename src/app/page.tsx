@@ -13,7 +13,7 @@ export default function Home() {
 
       <Banner />
 
-      <section className="container mx-auto px-4">
+      <section className="container relative mx-auto max-w-8xl flex-grow px-4 md:px-6">
         
         <Cards />
         <ImageCard />

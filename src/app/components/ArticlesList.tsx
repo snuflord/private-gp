@@ -1,13 +1,13 @@
 'use client'
 
-import { getArticles } from "../lib/allDataArticles"
+import { getArticlesList } from "../lib/allDataArticles"
 import { Key, Suspense, useEffect, useState } from "react"
 import { CardSkeleton } from "./UI/skeletons";
 import { Card } from "./UI/AllCards";
 import clsx from "clsx";
 import Link from "next/link";
 
-export default function BlogCards() {
+export default function ArticlesList() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [articlesList, setArticlesList] = useState([]);
@@ -16,7 +16,7 @@ export default function BlogCards() {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const json = await getArticles({ page: currentPage });
+                const json = await getArticlesList({ page: currentPage });
                 setArticlesList(json.data);
 
                 console.log(json.data)
@@ -43,7 +43,6 @@ export default function BlogCards() {
 
     return (
         <>
-            <Link href="/articles">See Articles</Link>
             <div className="w-full flex flex-col md:flex-col-reverse my-10">
                 <div className="flex md:py-4 w-full items-center justify-end space-x-5 my-5">
                     <button className={clsx("min-w-20 rounded-lg p-2 md:p-4 bg-blue-500 hover:bg-blue-600 font-bold", {"bg-gray-900 hover:bg-gray-900 cursor-not-allowed": currentPage === 1})} onClick={handlePrevPage} disabled={currentPage === 1}>Prev.</button>
@@ -51,13 +50,13 @@ export default function BlogCards() {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 w-full">
+                    <div className="w-full md:w-1/2">
                         {Array.from({ length: 3 }).map((_, index) => (
                             <CardSkeleton key={index} />
                         ))}
                     </div>
                 ) : articlesList && articlesList.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 w-full">
+                    <div className="w-full md:w-1/2">
                         {articlesList.map((article: { id: Key | null | undefined; attributes: any }) => (
                             <Suspense key={article.id} fallback={<CardSkeleton/>}>
                                 <Card key={article.id} article={article} />
@@ -65,7 +64,7 @@ export default function BlogCards() {
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 w-full">
+                    <div className="w-full md:w-1/2">
                         <div className="bg-slate-800 rounded-lg p-4 w-full min-h-32 h-full">
                             <span className="font-bold">No More items!</span>
                         </div>

@@ -1,5 +1,5 @@
 
-export default function ServicesLayout({children,} : {children: React.ReactNode}) {
+export default function ArticlesLayout({children,} : {children: React.ReactNode}) {
 
     return (
         <main className="container relative mx-auto max-w-8xl flex-grow px-4 md:px-6">{children}</main>
