@@ -90,6 +90,29 @@ export async function getArticles({ page }: { page?: number | undefined }) {
   return data;
 }
 
+// Articles Component
+
+export async function getArticlesList({ page }: { page?: number | undefined }) {
+  const pageNumber = page !== undefined ? page : '1'; // Use page value if provided, otherwise default to 1
+
+  const res = await fetch(
+    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=5&sort[0]=createdAt:desc&[populate]=*`,
+    { cache: 'no-store' }
+  );
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  const data = await res.json();
+  if (!data || !data.data) {
+    console.log('No articles found or invalid response structure:', data);
+    return null;
+  }
+
+  return data;
+}
+
 // single article
 export async function getArticle(slug: string, revalidate = false) {
   console.log(`slug: ${slug} passed ass prop on request`)
