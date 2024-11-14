@@ -1,14 +1,11 @@
 {
-  "name": "private-gp",
-  "version": "0.1.0",
-  "private": true,
   "engines": {
     "node": "20.x"
   },
   "scripts": {
-    "dev": "nvm exec 20.9.0 node -v && next dev -p 4000",
+    "dev": "next dev -p 4000",
     "build": "next build",
-    "start": "nvm exec 20.9.0 node -v && next start -p 5000",
+    "start": "next start -p 5000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -22,10 +19,10 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.2.12",
-    "next": "14.2.4",
+    "next": "15.0.3",
     "qs": "^6.13.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-icons": "^5.2.1",
     "react-markdown": "^9.0.1",
     "sharp": "^0.33.5"
@@ -33,12 +30,10 @@
   "devDependencies": {
     "@types/node": "^20.14.9",
     "@types/qs": "^6.9.15",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.5.3"
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8"
   }
 }
