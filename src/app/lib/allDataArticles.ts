@@ -90,13 +90,13 @@ export async function getArticles({ page }: { page?: number | undefined }) {
   return data;
 }
 
-// Articles Component
+// Articles Component used on /articles page
 
 export async function getArticlesList({ page }: { page?: number | undefined }) {
   const pageNumber = page !== undefined ? page : '1'; // Use page value if provided, otherwise default to 1
 
   const res = await fetch(
-    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=5&sort[0]=createdAt:desc&[populate]=*`,
+    `${API_URL}/articles/?pagination[page]=${pageNumber}&pagination[pageSize]=6&sort[0]=createdAt:desc&[populate]=*`,
     { cache: 'no-store' }
   );
 

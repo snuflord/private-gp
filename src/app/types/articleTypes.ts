@@ -48,6 +48,31 @@ export interface MediaData {
   publishedAt: string | null;
 }
 
+export interface VideoData {
+  id: number;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  width: number | null;
+  height: number | null;
+  formats: any | null;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: {
+    public_id: string;
+    resource_type: 'video';
+  };
+  createdAt: string;
+  updatedAt: string;
+  documentId: string;
+  locale: string | null;
+  publishedAt: string | null;
+}
 
 // Text node within the description
 export interface TextNode {
@@ -89,10 +114,11 @@ export type DescriptionNode = ParagraphNode | ListNode;
 
 // Main ArticleData interface
 export interface ArticleData {
-  Youtube: string | null;
+  youtube: string | null;
   id: number;
   title: string;
-  Hero: MediaData; 
+  hero: MediaData; 
+  video: VideoData[] | null;
   description: DescriptionNode[]; // Array of description nodes
   createdAt: string;
   updatedAt: string;
