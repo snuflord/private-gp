@@ -3,6 +3,8 @@ import Image from "next/image";
 import defaultImage from '../../../../public/luxury-office.webp';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation'
+import { TfiLayoutMediaRightAlt } from "react-icons/tfi";
+
 
 // TypeScript Interfaces
 import {
@@ -110,7 +112,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   }
 
     return (
-      <div className="container mx-auto px-4 mt-12 max-w-5xl">
+      <div className="mx-auto mt-4 md:mt-12 max-w-5xl">
         <div className="md:min-h-[60vh]">
           <div className="flex flex-col md:flex-row md:justify-between mb-5">
             <span className="font-semibold">
@@ -124,13 +126,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <div className="flex w-100">
             <h1 className="text-3xl mb-5 md:text-4xl lg:text-6xl font-bold">{article.title}</h1>
           </div>
-
-          {json && json.data.Hero ? (
-            <div key={(json.data.Hero as MediaData)?.id} className="my-10 overflow-hidden">
+          {/* HERO banner */}
+          {json && json.data.hero ? (
+            <div key={(json.data.hero as MediaData)?.id} className="mb-5 md:mb-10 overflow-hidden">
               <div className="w-full">
                 <Image
-                  src={(json.data.Hero as MediaData).url}
-                  alt={(json.data.Hero as MediaData).name || "API Image"}
+                  src={(json.data.hero as MediaData).url}
+                  alt={(json.data.hero as MediaData).name || "API Image"}
                   width={1200}
                   height={675}
                   className="hidden md:block w-full h-full object-cover aspect-video"
@@ -138,8 +140,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
                   placeholder="empty"
                 />
                 <Image
-                  src={(json.data.Hero as MediaData).formats.small?.url || defaultImage}
-                  alt={(json.data.Hero as MediaData).name || "API Image"}
+                  src={(json.data.hero as MediaData).formats.small?.url || defaultImage}
+                  alt={(json.data.hero as MediaData).name || "API Image"}
                   width={1200}
                   height={675}
                   className="block md:hidden w-full h-full object-cover aspect-video"
@@ -238,9 +240,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
           <div>
             <>
-            {/* IMAGES */}
+            {/* IMAGES "media" */}
             {/* If there is data, and if the media items resource type is image... truth check then render */}
-            {json.data.media && json.data.media.some((mediaItem: MediaData) => mediaItem.provider_metadata.resource_type === 'image') ? (
+            {json.data.media ? (
               <>
                 <div className="w-full md:w-1/2 overflow-hidden my-10 mx-auto">
                   <div className="flex space-x-2 md:space-x-10">
@@ -295,51 +297,54 @@ export default async function Page({ params }: { params: { slug: string } }) {
             ) : (
               <></>
             )}
-            </>
-            {/* VIDEO MP4 */}
-            <>
-            {json && json.data.media?.[0]?.provider_metadata.resource_type === 'video' && (
-              <>
-                <div className="md:w-2/3 my-10 mx-auto">
+            </> 
+          </div>
+
+          {/* VIDEO MP4 */}
+          
+          {json && json.data.video && json.data.video.length > 0 && (
+            <div>
+              <h1 className="text-5xl font-bold">{`${json.data.video[0].caption ? json.data.video[0].caption: 'Video'}`}</h1>
+              {Array.isArray(json.data.video) && json.data.video.map((videoItem: any, index: number) => (
+                <div key={index} className="w-full my-10 mx-auto">
                   <div className="video-container">
                     <video
                       width="100%"
                       height="auto"
                       controls
-                      poster={json.data.media?.[0]?.previewUrl || undefined}
+                      poster={videoItem.previewUrl || undefined}
                     >
-                      <source src={json.data.media?.[0]?.url} type="video/mp4" />
+                      <source src={videoItem.url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   </div>
                 </div>
-              </>
-            )}
-            </>
-            {/* VIDEO YOUTUBE EMBED */}
-            {json && json.data.Youtube && json.data.Youtube.trim() !== '' ? (
-              <>
-                <div className="my-10 mx-auto">
-                  <div className="w-full h-0 pb-[56.25%] relative">
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full"
-                      src={`https://www.youtube.com/embed/${json.data.Youtube.includes('watch?v=') ? json.data.Youtube.split('watch?v=')[1] : json.data.Youtube.split('be/')[1]}`}
-                      title="YouTube video player"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
+              ))}
+            </div>
+          )}
+            
+
+          {/* YOUTUBE EMBED */}
+          {json && json.data.youtube && json.data.youtube.trim() !== '' ? (
+              <div className="my-10 mx-auto overflow-hidden">
+                <div className="w-full h-0 pb-[56.25%] relative">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${json.data.youtube.includes('watch?v=') ? json.data.youtube.split('watch?v=')[1] : json.data.youtube.split('be/')[1]}`}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  ></iframe>
                 </div>
-              </>
+              </div>
             ) : (
               <></>
             )}
-          </div>
 
           {latestArticlesArr.length > 0 ? (
             <>
-              <h2 className="text-2xl font-bold my-10">Latest Articles</h2>
+              <Link href="/articles" className="group text-2xl font-bold my-2 md:my-4 transition-all duration-300 underline underline-offset-2 md:hover:underline-offset-8 inline-flex flex-row items-center">Latest Articles<TfiLayoutMediaRightAlt className="transition-all duration-400 ml-4 group-hover:md:scale-125 group-hover:md:ml-5"/></Link>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-5">
                 {latestArticlesArr.map((articleItem: ArticleData ) => (
