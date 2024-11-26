@@ -1,7 +1,6 @@
 'use client'
 
 import Link from "next/link";
-import Markdown from "react-markdown";
 import Image from "next/image";
 import placeholder from "../../../../public/placeholder-image.jpg";
 

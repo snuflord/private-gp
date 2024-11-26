@@ -1,17 +1,17 @@
 'use client'
 
-import { useState, useEffect } from "react";
-import { FaUser } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css";
-import Link from "next/link";
-import { useAuth } from "../../../context/AuthContext";
+import { useState, useEffect } from 'react';
+import { FaUser } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Input, Button, Card, CardHeader, CardBody, Spacer } from '@nextui-org/react';
+import { useAuth } from '../../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 
 export default function LoginPage() {
 
     const { error, loginUser, } = useAuth();
-    
     const [values, setValues] = useState({
         identifier: '',
         password: '',
@@ -32,13 +32,12 @@ export default function LoginPage() {
     }
 
     const handleLogin = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault()
 
+        e.preventDefault()
         const hasEmptyFields = Object.values(values).some((element) => element === '')
   
         if(hasEmptyFields) {
-        
-            toast.error("Empty fields!")
+            toast.error("Please fill in all fields")
             return
         } 
 
@@ -47,38 +46,68 @@ export default function LoginPage() {
                 identifier: values.identifier,
                 password: values.password,
             };
-
+            
             loginUser(user)
         }
     }
-    
 
-    return (
-    
-    <div className='w-full h-screen md:w-1/2 m-auto p-1 md:p-6 shadow-xl flex flex-col justify-center items-center'>
-            <h1 className='flex items-center text-2xl'>
-                <FaUser /> Log In
-            </h1>
-
-            <ToastContainer />
-
-            
-
-            <form className='w-full px-2' onSubmit={handleLogin}> 
-                <div className='flex flex-col my-2'>
-                    <label className='font-bold mb-2' htmlFor='email'>Email</label>
-                    <input className='bg-slate-500 h-4 p-4 rounded w-full text-white' type='email' id='email' name='identifier' value={values.identifier} onChange={handleInputChange}/>
-                </div>
-
-                <div className='flex flex-col my-2'>
-                    <label className='font-bold mb-2' htmlFor='password'>Password</label>
-                    <input className='bg-slate-500 h-4 p-4 rounded w-full' type='password' id='password' name="password" value={values.password} onChange={handleInputChange}/>
-                </div>
-
-                <button type='submit' value='Login' className='btn my-4 w-full'>Login</button>
-            </form>
-
-            <p className='my-2'>Don&apos;t have an account? <Link className='underline' href='/register'>Register</Link></p>
-        </div>
-  )
+  return (
+    <div className='w-full h-screen flex justify-center items-center'>
+      <Card className='w-full md:w-1/2 p-6 shadow-xl'>
+        <CardHeader className='flex justify-center'>
+          <h1 className='flex items-center text-2xl'>
+            <FaUser className='mr-2' /> Log In
+          </h1>
+        </CardHeader>
+        <CardBody>
+          <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+             />
+          <form className='w-full' onSubmit={handleLogin}>
+            <Input
+              isClearable
+              fullWidth
+              color="primary"
+              size="lg"
+              placeholder="Email"
+              type='email'
+              id='email'
+              name='identifier'
+              value={values.identifier}
+              onChange={handleInputChange}
+              className='my-2'
+            />
+            <Spacer y={1} />
+            <Input
+              isClearable
+              fullWidth
+              color="primary"
+              size="lg"
+              placeholder="Password"
+              type='password'
+              id='password'
+              name="password"
+              value={values.password}
+              onChange={handleInputChange}
+              className='my-2'
+            />
+            <Spacer y={1} />
+            <Button type='submit' className='w-full' color="primary" size="lg">
+              Login
+            </Button>
+          </form>
+          <Spacer y={1} />
+        </CardBody>
+      </Card>
+    </div>
+  );
 }

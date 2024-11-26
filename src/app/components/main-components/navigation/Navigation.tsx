@@ -11,7 +11,6 @@ import { Button } from "@nextui-org/button";
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
 import { getPagesNames } from "@/app/lib/allDataPages";
-// import { getGlobalLogo } from "@/app/lib/globalData";
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { HiOutlineChevronRight } from "react-icons/hi2";
@@ -34,9 +33,6 @@ export default function Navigation() {
         const pagesResponse = await getPagesNames();
         setServicePagesList(pagesResponse.data);
 
-        // const logoResponse = await getGlobalLogo();
-        // setLoading(false);
-        // setLogoUrl(logoResponse || "");
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -161,9 +157,9 @@ export default function Navigation() {
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
 
-              <DropdownItem startContent={<IoMdSettings />} key="new"><Link href="/admin-login-portal">Admin Login</Link></DropdownItem>
+              <DropdownItem textValue="admin-login" startContent={<IoMdSettings />} key="new"><Link href="/admin-login-portal">Admin Login</Link></DropdownItem>
 
-              <DropdownItem startContent={<FaHospitalUser />} className="font-bold" key="copy"><Link href="/login-portal">Patient Lgin</Link></DropdownItem>
+              <DropdownItem textValue="patient-login" startContent={<FaHospitalUser />} className="font-bold" key="copy"><Link href="/login-portal">Patient Lgin</Link></DropdownItem>
 
             </DropdownMenu>
           </Dropdown>

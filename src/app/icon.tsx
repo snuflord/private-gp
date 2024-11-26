@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getGlobalFavicon } from './lib/globalData';
+//https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons#icon
 
 // Image metadata
 export const size = {
@@ -71,7 +72,7 @@ export default async function Icon() {
             color: 'white',
           }}
         >
-          A
+          +
         </div>
       ),
       {

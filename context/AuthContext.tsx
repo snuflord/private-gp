@@ -2,34 +2,21 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { NEXT_URL } from '../config';
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { useRouter } from "next/navigation";
+import { User } from '@/app/types/userTypes';
 
-
-// Define the shape of your user object
-interface User {
-  id: string;
-  username: string;
-  // ... other properties
-}
 
 interface Error {
-  
-    status?: number;
-    name?: string;
-    message?: string;
-    details?: object;
-  
+  status?: number;
+  name?: string;
+  message?: string;
+  details?: object;
 }
 
 // Define the authentication context type
 interface AuthContextType {
     error: Error | null;
-    token: null;
-    user: User | null;
-    isAuthenticated: boolean;
-    checkUserLoggedIn: () => void;
     registerUser: (user: any) => Promise<void>;
     loginUser: (user: any) => Promise<void>; // Specify login credentials types
     logoutUser: () => Promise<void>; // Add logoutUser function type
@@ -58,48 +45,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-const checkUserLoggedIn = async () => {
-    try {
-      const res = await fetch(`${NEXT_URL}/api/checkUserLoggedIn`);
-      const data = await res.json();
-
-        // console.log(data);
-
-      if (res.ok) {
-
-        setUser(data);
-        setIsAuthenticated(true);
-
-      } else {
-
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-    } catch (error) {
-      console.error('Error checking user login status:', error);
-    }
-  };
-
-  const getUserToken = async () => {
-    try {
-        const res = await fetch(`${NEXT_URL}/api/getUserToken`);
-
-        const data = await res.json();
-
-        if (res.ok) {
-            setToken(data);
-        } else {
-            setToken(null); 
-        }
-    } catch (error) {
-        console.error('Error fetching user token:', error);
-
-        return
-    }
-};
 
 
-const registerUser = async (user: { username: string; identifier: string; password: string }) => {
+  const registerUser = async (user: { username: string; identifier: string; password: string }) => {
     try {
         
         // console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
@@ -131,7 +79,7 @@ const registerUser = async (user: { username: string; identifier: string; passwo
 
             setUser(data);
             setIsAuthenticated(true);
-            router.push('/dashboard')
+            router.push('/')
 
         } else {
             const errorMessage = data.error;
@@ -142,10 +90,10 @@ const registerUser = async (user: { username: string; identifier: string; passwo
         
         console.error('Error in registerUser:', error);
     }
-};
+  };
 
 
-const deleteUser = async( user: {userId: string; token: string}) => {
+  const deleteUser = async( user: {userId: string; token: string}) => {
   try {
         
     // console.log(`user is ${user.username}, email is ${user.identifier}, password is ${user.password}`);
@@ -177,7 +125,7 @@ const deleteUser = async( user: {userId: string; token: string}) => {
           setUser(null);
           setIsAuthenticated(false);
           console.log('user deleted')
-          router.push('/dashboard')
+          router.push('/')
 
       } else {
           const errorMessage = data.error.message;
@@ -188,10 +136,10 @@ const deleteUser = async( user: {userId: string; token: string}) => {
         
         console.error('Error in registerUser:', error);
     }
-}
+  }
 
-const loginUser = async (user: { identifier: string; password: string }) => {
-  try {
+  const loginUser = async (user: { identifier: string; password: string }) => {
+   try {
     const res = await fetch(`${NEXT_URL}/api/loginUser`, {
       method: 'POST',
       headers: {
@@ -215,15 +163,15 @@ const loginUser = async (user: { identifier: string; password: string }) => {
       setUser(data);
       setIsAuthenticated(true);
       
-      router.push('/dashboard')
+      router.push('/')
     } else {
       
       setError(data.error);
     }
-  } catch (error) {
-    console.error('Error in loginUser:', error);
-  }
-};
+    } catch (error) {
+      console.error('Error in loginUser:', error);
+    }
+  };
 
   const logoutUser = async () => {
     try {
@@ -240,17 +188,9 @@ const loginUser = async (user: { identifier: string; password: string }) => {
     }
   };
 
-  useEffect(() => {
-    checkUserLoggedIn();
-    getUserToken();
-  }, []); // Run once on component mount
 
   const contextValue: AuthContextType = {
     error,
-    user,
-    token,
-    isAuthenticated,
-    checkUserLoggedIn,
     registerUser,
     loginUser,
     logoutUser,

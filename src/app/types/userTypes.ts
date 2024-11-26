@@ -1,5 +1,13 @@
-interface User {
-    id: string;
+export interface User {
+    id: number;
     username: string;
-    // ... other properties
-  }
+    email: string;
+    provider: string;
+    confirmed: boolean;
+    blocked: boolean;
+    createdAt: string;
+    updatedAt: string;
+    documentId: string;
+    locale: string | null;
+    publishedAt: string;
+}
